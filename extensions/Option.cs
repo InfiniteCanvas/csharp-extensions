@@ -38,13 +38,16 @@ public abstract class Option<TValue>
     public static bool operator !=(Option<TValue> opt1, Option<TValue> opt2) =>
         !Equals(opt1, opt2);
 
+    public static implicit operator Option<TValue>(TValue value) => new Some<TValue>(value);
+    public static implicit operator Option<TValue>(None _) => new None<TValue>();
+
 }
 
 /// <summary>
 ///     Some value is there
 /// </summary>
 /// <typeparam name="TValue">The wrapped type</typeparam>
-internal sealed class Some<TValue> : Option<TValue>
+public sealed class Some<TValue> : Option<TValue>
 {
 
     public TValue Value { get; }
@@ -60,4 +63,11 @@ internal sealed class Some<TValue> : Option<TValue>
 ///     No value is there
 /// </summary>
 /// <typeparam name="TValue">The wrapped type</typeparam>
-internal sealed class None<TValue> : Option<TValue> { }
+public sealed class None<TValue> : Option<TValue> { }
+
+public sealed class None
+{
+    public static None Value { get; } = new None();
+
+    private None() { }
+}
