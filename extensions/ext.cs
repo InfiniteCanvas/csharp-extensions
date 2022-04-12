@@ -1,6 +1,6 @@
 ﻿namespace extensions
 {
-    public static class Ext
+    public static class EnumerableExtensions
     {
 
     }

@@ -62,7 +62,7 @@ public sealed class None<TValue> : Option<TValue> { }
 
 public sealed class None
 {
-    public static None Value => _value ??= new();
+    public static None Instance => _value ??= new();
     private static None? _value;
     private None() { }
 }

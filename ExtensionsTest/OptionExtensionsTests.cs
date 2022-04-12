@@ -33,16 +33,39 @@ namespace OptionExtensionsTest
         }
 
         [Test]
-        public void FromNullablesWorks()
+        public void MaybeNullFromClasses_SomeAndNoneCases()
         {
             Assert.IsInstanceOf<None<Random>>(GetDefault<Random>().MaybeNull());
-            Assert.IsInstanceOf<Some<int>>(GetDefault<int>().MaybeNull());
+            var t = new Object();
+            Assert.IsInstanceOf<Some<object>>(t.MaybeNull());
+        }
 
+        [Test]
+        public void MaybeNullFromNullable_SomeAndNoneCases()
+        {
             Assert.IsInstanceOf<Some<int>>(new Nullable<int>(2).MaybeNull());
             Assert.IsInstanceOf<None<int>>(new Nullable<int>().MaybeNull());
         }
 
+        [Test]
+        public void OptionMap_SomeChecks()
+        {
+            // some
+            Option<int> start = new Some<int>(0);
+            string end = start.TryMap(x => x.ToString());
+            Assert.AreEqual("0", end);
+        }
+
+        [Test]
+        public void OptionMap_NoneChecks()
+        {
+            // some
+            Option<int> start = new None<int>();
+            string end = start.TryMap(x => x.ToString());
+            Assert.AreEqual("0", end);
+        }
+
         private T ThrowError<T>() => throw new Exception();
-        private T GetDefault<T>() => default(T);
+        private T? GetDefault<T>() => default;
     }
 }
