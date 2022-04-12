@@ -33,22 +33,16 @@ namespace OptionExtensionsTest
         }
 
         [Test]
-        public void MaybeNullFromClasses_SomeAndNoneCases()
-        {
-            Assert.IsInstanceOf<None<Random>>(GetDefault<Random>().MaybeNull());
-            var t = new Object();
-            Assert.IsInstanceOf<Some<object>>(t.MaybeNull());
-        }
-
-        [Test]
-        public void MaybeNullFromNullable_SomeAndNoneCases()
-        {
-            Assert.IsInstanceOf<Some<int>>(new Nullable<int>(2).MaybeNull());
-            Assert.IsInstanceOf<None<int>>(new Nullable<int>().MaybeNull());
-        }
-
-        [Test]
         public void OptionMap_SomeChecks()
+        {
+            // some
+            Option<int> start = new Some<int>(0);
+            var end = start.TryMap(x => x.ToString());
+            Assert.AreEqual("0".Some(), end);
+        }
+
+        [Test]
+        public void OptionMap_SomeChecks_ImplicitOperator()
         {
             // some
             Option<int> start = new Some<int>(0);
@@ -61,8 +55,20 @@ namespace OptionExtensionsTest
         {
             // some
             Option<int> start = new None<int>();
+            var end = start.TryMap(x => x.ToString());
+            Assert.AreEqual(new None<string>(), end);
+        }
+
+        [Test]
+        public void OptionMap_NoneChecks_Implicit()
+        {
+            Assert.Throws<Exception>(ImplicitAssignmentWithThrow);
+        }
+
+        private void ImplicitAssignmentWithThrow()
+        {
+            Option<int> start = new None<int>();
             string end = start.TryMap(x => x.ToString());
-            Assert.AreEqual("0", end);
         }
 
         private T ThrowError<T>() => throw new Exception();

@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Common.Extensions;
 
 /// <summary>
@@ -32,14 +34,13 @@ public abstract class Option<TValue>
     public static bool operator !=(Option<TValue> opt1, Option<TValue> opt2) =>
         !Equals(opt1, opt2);
 
-    public static implicit operator Option<TValue>(TValue value) => new Some<TValue>(value);
-    public static implicit operator Option<TValue>(None _) => new None<TValue>();
-
-    public static implicit operator TValue(Option<TValue> value) => value switch
+    public static implicit operator Option<TValue>([DisallowNull] TValue value) => new Some<TValue>(value);
+    public static implicit operator None(Option<TValue> _) => None.Instance;
+    public static implicit operator TValue(Option<TValue> option) => option switch
     {
-        Some<TValue> some => some.Value,
-        None<TValue> _ => new None<TValue>(),
-        _ => throw new Exception("Invalid type. Shouldn't actually happen..")
+        Some<TValue> some => some,
+        None<TValue> _ => throw new Exception(),
+        _ => throw new Exception()
     };
 }
 
@@ -49,16 +50,25 @@ public abstract class Option<TValue>
 /// <typeparam name="TValue">The wrapped type</typeparam>
 public sealed class Some<TValue> : Option<TValue>
 {
+    [NotNull]
     public TValue Value { get; }
-    public Some(TValue value) => Value = value;
+    public Some([DisallowNull, NotNull] TValue value) => Value = value;
     public static implicit operator TValue(Some<TValue> value) => value.Value;
+
+    public override string? ToString() => Value.ToString();
 }
 
 /// <summary>
 ///     No value is there
 /// </summary>
 /// <typeparam name="TValue">The wrapped type</typeparam>
-public sealed class None<TValue> : Option<TValue> { }
+public sealed class None<TValue> : Option<TValue>
+{
+    public override string ToString()
+    {
+        throw new();
+    }
+}
 
 public sealed class None
 {

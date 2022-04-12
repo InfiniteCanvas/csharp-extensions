@@ -11,7 +11,11 @@ public static class OptionExt
     /// <typeparam name="TValue">Wrapped type</typeparam>
     /// <param name="value">Value to wrap</param>
     /// <returns>Some Option</returns>
-    public static Option<TValue> Some<TValue>(this TValue value) => new Some<TValue>(value);
+    public static Option<TValue> Some<TValue>(this TValue value) => value switch
+    {
+        not null => new Some<TValue>(value),
+        _ => new None<TValue>(),
+    };
 
     /// <summary>
     ///     Make None Option
@@ -20,40 +24,33 @@ public static class OptionExt
     /// <returns>Option with None</returns>
     public static Option<TValue> None<TValue>(this TValue _) => new None<TValue>();
 
-    /// <summary>
-    ///     Creates an optional from a nullable, returns None Option if null, else Some Option
-    /// </summary>
-    /// <param name="value">Value to wrap</param>
-    /// <typeparam name="TValue">Wrapped Type</typeparam>
-    /// <returns>Option with Some or None</returns>
-    public static Option<TValue> MaybeNull<TValue>(this TValue value) where TValue : new() =>
-        value != null ? value.Some() : value.None();
+    public static Option<TValue> FromMaybeNull<TValue>(this TValue value) => value switch
+    {
+        not null => value.Some(),
+        _ => new None<TValue>(),
+    };
 
-    /// <summary>
-    ///     Creates an optional from a nullable, returns None Option if null, else Some Option
-    /// </summary>
-    /// <param name="value">Value to wrap</param>
-    /// <typeparam name="TValue">Wrapped Type</typeparam>
-    /// <returns>Option with Some or None</returns>
-    public static Option<TValue> MaybeNull<TValue>(this TValue? value) where TValue : struct =>
-        value != null ? Some(value.Value) : new None<TValue>();
-
+    public static TValue TryGet<TValue>(this Option<TValue> @this) => @this switch
+    {
+        Some<TValue> some => some,
+        _ => throw new Exception(),
+    };
 
     /// <summary>
     ///     Creates an Option for functions that might fail using try/catch
     ///     Returns Some if it succeeds,
     ///     None if it fails
     /// </summary>
-    /// <typeparam name="TValue">Wrapped type</typeparam>
+    /// <typeparam name="TResult">Wrapped type</typeparam>
     /// <param name="func">The function</param>
     /// <returns>Some or None</returns>
-    public static Option<TValue> TryCatch<TValue>(this Func<TValue> func)
+    public static Option<TResult> TryCatch<TResult>(this Func<TResult> func)
     {
         try { return Some(func()); }
-        catch { return new None<TValue>(); }
+        catch { return new None<TResult>(); }
     }
 
-    public static Option<TResult> TryCatch<TValue, TResult>(this Option<TValue> @this, Func<TValue, TResult> func)
+    public static Option<TResult> TryCatch<TInput, TResult>(this Option<TInput> @this, Func<TInput, TResult> func)
     {
         try { return Some(func(@this)); }
         catch { return new None<TResult>(); }
@@ -120,10 +117,10 @@ public static class OptionExt
     /// <param name="dont">Function run on None</param>
     /// <returns>Result of the function run</returns>
     /// <exception cref="Exception">Shouldn't happen</exception>
-    public static Option<TResult> MaybeDo<TInput, TResult>(this Option<TInput> @this, Func<TInput, TResult> @do, Func<TInput, TResult> dont) => @this switch
+    public static Option<TResult> MaybeMap<TInput, TResult>(this Option<TInput> @this, Func<TInput, TResult> @do, Func<TResult> dont) => @this switch
     {
-        Some<TInput> some => @do(some),
-        None<TInput> none => dont(none),
+        Some<TInput> some => @do(some).FromMaybeNull(),
+        None<TInput> _ => dont().None(),
         _ => throw new Exception("Shouldn't happen")
     };
 
@@ -141,6 +138,8 @@ public static class OptionExt
         {
             case Some<TInput> some: @do(some); break;
             case None<TInput> _: dont(); break;
+            default:
+                break;
         };
     }
 
