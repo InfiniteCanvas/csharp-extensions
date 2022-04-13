@@ -11,11 +11,14 @@ public static class OptionExt
     /// <typeparam name="TValue">Wrapped type</typeparam>
     /// <param name="value">Value to wrap</param>
     /// <returns>Some Option</returns>
-    public static Option<TValue> Some<TValue>(this TValue value) => value switch
+    public static Option<TValue> Some<TValue>(this TValue value)
     {
-        not null => new Some<TValue>(value),
-        _ => new None<TValue>(),
-    };
+        return value switch
+               {
+                   not null => new Some<TValue>(value),
+                   _        => new None<TValue>(),
+               };
+    }
 
     /// <summary>
     ///     Make None Option
@@ -24,17 +27,23 @@ public static class OptionExt
     /// <returns>Option with None</returns>
     public static Option<TValue> None<TValue>(this TValue _) => new None<TValue>();
 
-    public static Option<TValue> FromMaybeNull<TValue>(this TValue value) => value switch
+    public static Option<TValue> FromMaybeNull<TValue>(this TValue value)
     {
-        not null => value.Some(),
-        _ => new None<TValue>(),
-    };
+        return value switch
+               {
+                   not null => value.Some(),
+                   _        => new None<TValue>(),
+               };
+    }
 
-    public static TValue TryGet<TValue>(this Option<TValue> @this) => @this switch
+    public static TValue TryGet<TValue>(this Option<TValue> @this)
     {
-        Some<TValue> some => some,
-        _ => throw new Exception(),
-    };
+        return @this switch
+               {
+                   Some<TValue> some => some,
+                   _                 => throw new Exception(),
+               };
+    }
 
     /// <summary>
     ///     Creates an Option for functions that might fail using try/catch
@@ -52,7 +61,14 @@ public static class OptionExt
 
     public static Option<TResult> TryCatch<TInput, TResult>(this Option<TInput> @this, Func<TInput, TResult> func)
     {
-        try { return Some(func(@this)); }
+        try { return Some(func(@this.TryGet())); }
+        catch { return new None<TResult>(); }
+    }
+
+    public static Option<TResult> TryCatch<TInput, TResult>(this Option<TInput>           @this,
+                                                            Func<TInput, Option<TResult>> func)
+    {
+        try { return func(@this.TryGet()); }
         catch { return new None<TResult>(); }
     }
 
@@ -68,7 +84,8 @@ public static class OptionExt
     ///     Some on success
     ///     None on faiure
     /// </returns>
-    public static Option<TResult> TryMap<TInput, TResult>(this Option<TInput> @this, Func<TInput, TResult> func) => @this.TryCatch(func);
+    public static Option<TResult> TryMap<TInput, TResult>(this Option<TInput> @this, Func<TInput, TResult> func) =>
+        @this.TryCatch(func);
 
     /// <summary>
     ///     Tries to bind the Option from one type to an Option.
@@ -82,7 +99,8 @@ public static class OptionExt
     ///     Some on success
     ///     None on faiure
     /// </returns>
-    public static Option<TResult> TryBind<TInput, TResult>(this Option<TInput> @this, Func<TInput, Option<TResult>> func) => @this.TryCatch(func);
+    public static Option<TResult> TryBind<TInput, TResult>(this Option<TInput>           @this,
+                                                           Func<TInput, Option<TResult>> func) => @this.TryCatch(func);
 
     /// <summary>
     ///     Checks if Option is Some
@@ -117,12 +135,17 @@ public static class OptionExt
     /// <param name="dont">Function run on None</param>
     /// <returns>Result of the function run</returns>
     /// <exception cref="Exception">Shouldn't happen</exception>
-    public static Option<TResult> MaybeMap<TInput, TResult>(this Option<TInput> @this, Func<TInput, TResult> @do, Func<TResult> dont) => @this switch
+    public static Option<TResult> MaybeMap<TInput, TResult>(this Option<TInput>   @this,
+                                                            Func<TInput, TResult> @do,
+                                                            Func<TResult>         dont)
     {
-        Some<TInput> some => @do(some).FromMaybeNull(),
-        None<TInput> _ => dont().None(),
-        _ => throw new Exception("Shouldn't happen")
-    };
+        return @this switch
+               {
+                   Some<TInput> some => @do(some).FromMaybeNull(),
+                   None<TInput> _    => dont().None(),
+                   _                 => throw new Exception("Shouldn't happen"),
+               };
+    }
 
     /// <summary>
     ///     Does stuff if Some using Some value
@@ -134,13 +157,8 @@ public static class OptionExt
     /// <param name="dont">Function run if None</param>
     public static void MaybeDo<TInput>(this Option<TInput> @this, Action<TInput> @do, Action dont)
     {
-        switch (@this)
-        {
-            case Some<TInput> some: @do(some); break;
-            case None<TInput> _: dont(); break;
-            default:
-                break;
-        };
+        if (@this is Some<TInput> some) @do(some);
+        else dont();
     }
 
     /// <summary>
@@ -154,10 +172,15 @@ public static class OptionExt
     /// <param name="dont">Function run if None</param>
     /// <returns>Option output</returns>
     /// <exception cref="Exception"></exception>
-    public static Option<TResult> MaybeDoBind<TInput, TResult>(this Option<TInput> @this, Func<TInput, Option<TResult>> @do, Func<TInput, Option<TResult>> dont) => @this switch
+    public static Option<TResult> MaybeDoBind<TInput, TResult>(this Option<TInput>           @this,
+                                                               Func<TInput, Option<TResult>> @do,
+                                                               Func<None<TResult>>           dont)
     {
-        Some<TInput> some => @do(some),
-        None<TInput> none => dont(none),
-        _ => throw new Exception("Shouldn't happen")
-    };
+        return @this switch
+               {
+                   Some<TInput> some => @do(some),
+                   None<TInput> none => dont(),
+                   _                 => throw new Exception("Shouldn't happen"),
+               };
+    }
 }
