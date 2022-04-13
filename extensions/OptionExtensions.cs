@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.Contracts;
 
 namespace Common.Extensions;
 
@@ -13,14 +13,12 @@ public static class OptionExt
     /// <typeparam name="TValue">Wrapped type</typeparam>
     /// <param name="value">Value to wrap</param>
     /// <returns>Some Option</returns>
-    public static Option<TValue> Some<TValue>(this TValue value)
-    {
-        return value switch
-               {
-                   not null => new Some<TValue>(value),
-                   _        => new None<TValue>(),
-               };
-    }
+    public static Option<TValue> Some<TValue>(this TValue value) =>
+        value switch
+        {
+            not null => new Some<TValue>(value),
+            _        => new None<TValue>()
+        };
 
     /// <summary>
     ///     Make None Option
@@ -29,23 +27,19 @@ public static class OptionExt
     /// <returns>Option with None</returns>
     public static Option<TValue> None<TValue>(this TValue _) => new None<TValue>();
 
-    public static Option<TValue> FromMaybeNull<TValue>(this TValue value)
-    {
-        return value switch
-               {
-                   not null => value.Some(),
-                   _        => new None<TValue>(),
-               };
-    }
+    public static Option<TValue> FromMaybeNull<TValue>(this TValue value) =>
+        value switch
+        {
+            not null => value.Some(),
+            _        => new None<TValue>()
+        };
 
-    public static TValue TryGet<TValue>(this Option<TValue> @this)
-    {
-        return @this switch
-               {
-                   Some<TValue> some => some,
-                   _                 => throw new Exception(),
-               };
-    }
+    public static TValue TryGet<TValue>(this Option<TValue> @this) =>
+        @this switch
+        {
+            Some<TValue> some => some,
+            _                 => throw new Exception()
+        };
 
     /// <summary>
     ///     Creates an Option for functions that might fail using try/catch
@@ -84,7 +78,7 @@ public static class OptionExt
     /// <param name="func">Mapping function</param>
     /// <returns>
     ///     Some on success
-    ///     None on faiure
+    ///     None on failure
     /// </returns>
     public static Option<TResult> TryMap<TInput, TResult>(this Option<TInput> @this, Func<TInput, TResult> func) =>
         @this.TryCatch(func);
@@ -99,10 +93,11 @@ public static class OptionExt
     /// <param name="func">Binding function</param>
     /// <returns>
     ///     Some on success
-    ///     None on faiure
+    ///     None on failure
     /// </returns>
     public static Option<TResult> TryBind<TInput, TResult>(this Option<TInput>           @this,
-                                                           Func<TInput, Option<TResult>> func) => @this.TryCatch(func);
+                                                           Func<TInput, Option<TResult>> func) =>
+        @this.TryCatch(func);
 
     /// <summary>
     ///     Checks if Option is Some
@@ -139,15 +134,13 @@ public static class OptionExt
     /// <exception cref="Exception">Shouldn't happen</exception>
     public static Option<TResult> MaybeMap<TInput, TResult>(this Option<TInput>   @this,
                                                             Func<TInput, TResult> @do,
-                                                            Func<TResult>         dont)
-    {
-        return @this switch
-               {
-                   Some<TInput> some => @do(some).FromMaybeNull(),
-                   None<TInput> _    => dont().None(),
-                   _                 => throw new ArgumentOutOfRangeException(nameof(@this), @this, null)
-               };
-    }
+                                                            Func<TResult>         dont) =>
+        @this switch
+        {
+            Some<TInput> some => @do(some).FromMaybeNull(),
+            None<TInput> _    => dont().None(),
+            _                 => throw new ArgumentOutOfRangeException(nameof(@this), @this, null)
+        };
 
     /// <summary>
     ///     Does stuff if Some using Some value
@@ -176,13 +169,11 @@ public static class OptionExt
     /// <exception cref="Exception"></exception>
     public static Option<TResult> MaybeDoBind<TInput, TResult>(this Option<TInput>           @this,
                                                                Func<TInput, Option<TResult>> @do,
-                                                               Func<None<TResult>>           dont)
-    {
-        return @this switch
-               {
-                   Some<TInput> some => @do(some),
-                   None<TInput> none => dont(),
-                   _                 => throw new Exception("Shouldn't happen"),
-               };
-    }
+                                                               Func<None<TResult>>           dont) =>
+        @this switch
+        {
+            Some<TInput> some => @do(some),
+            None<TInput> _    => dont(),
+            _                 => throw new Exception("Shouldn't happen")
+        };
 }

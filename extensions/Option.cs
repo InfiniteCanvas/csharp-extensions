@@ -13,7 +13,7 @@ public abstract class Option<TValue>
         {
             Some<TValue> some1 when obj is Some<TValue> some2 => Equals(some1.Value, some2.Value),
             None<TValue> _ when obj is None<TValue> _         => true,
-            _                                                 => false,
+            _                                                 => false
         };
 
     public override int GetHashCode() =>
@@ -34,7 +34,7 @@ public abstract class Option<TValue>
         option switch
         {
             Some<TValue> some => some.Value,
-            _                 => throw new Exception(),
+            _                 => throw new Exception()
         };
 }
 
@@ -44,10 +44,9 @@ public abstract class Option<TValue>
 /// <typeparam name="TValue">The wrapped type</typeparam>
 public sealed class Some<TValue> : Option<TValue>
 {
-    public Some([DisallowNull, NotNull] TValue value) => Value = value;
+    public Some([DisallowNull] [NotNull] TValue value) => Value = value;
 
-    [NotNull]
-    public TValue Value { get; }
+    [NotNull] public TValue Value { get; }
 
     public static implicit operator TValue(Some<TValue> value) => value.Value;
 
@@ -61,13 +60,4 @@ public sealed class Some<TValue> : Option<TValue>
 public sealed class None<TValue> : Option<TValue>
 {
     public override string ToString() => throw new Exception();
-}
-
-public sealed class None
-{
-    private static None _value;
-
-    private None() { }
-
-    public static None Instance => _value ??= new None();
 }

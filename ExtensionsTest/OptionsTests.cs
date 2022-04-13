@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Common.Extensions.Tests;
 
@@ -64,7 +63,7 @@ public class OptionsTests
     public void Implicit_TValue()
     {
         Option<int> a = 2;
-        Assert.AreEqual(2, (int) a);
+        Assert.AreEqual(2, (int)a);
     }
 
     [Test]
@@ -72,7 +71,7 @@ public class OptionsTests
     {
         var a = 2.Some();
         var b = 2.None();
-        
+
         Assert.AreEqual(b.GetHashCode(), 0);
         Assert.AreNotEqual(a.GetHashCode(), 0);
     }
