@@ -19,9 +19,9 @@ public abstract class Option<TValue>
     public override int GetHashCode() =>
         this switch
         {
-            Some<TValue> some => some.GetHashCode(),
+            Some<TValue> some => some.Value.GetHashCode(),
             None<TValue> _    => 0,
-            _                 => throw new Exception("Invalid type"), // Here for the compiler. Should never happen
+            _                 => throw new ArgumentOutOfRangeException()
         };
 
     public static bool operator ==(Option<TValue> opt1, Option<TValue> opt2) => Equals(opt1, opt2);

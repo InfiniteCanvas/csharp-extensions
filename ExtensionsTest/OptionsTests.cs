@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Common.Extensions.Tests;
 
@@ -64,5 +65,15 @@ public class OptionsTests
     {
         Option<int> a = 2;
         Assert.AreEqual(2, (int) a);
+    }
+
+    [Test]
+    public void Get_Hashcode()
+    {
+        var a = 2.Some();
+        var b = 2.None();
+        
+        Assert.AreEqual(b.GetHashCode(), 0);
+        Assert.AreNotEqual(a.GetHashCode(), 0);
     }
 }

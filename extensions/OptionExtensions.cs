@@ -1,4 +1,6 @@
-﻿namespace Common.Extensions;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Common.Extensions;
 
 /// <summary>
 ///     Methods for Option for lazy bums like me
@@ -143,7 +145,7 @@ public static class OptionExt
                {
                    Some<TInput> some => @do(some).FromMaybeNull(),
                    None<TInput> _    => dont().None(),
-                   _                 => throw new Exception("Shouldn't happen"),
+                   _                 => throw new ArgumentOutOfRangeException(nameof(@this), @this, null)
                };
     }
 
