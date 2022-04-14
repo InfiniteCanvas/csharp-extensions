@@ -1,4 +1,9 @@
-﻿using NUnit.Framework;
+﻿#region
+
+using System;
+using NUnit.Framework;
+
+#endregion
 
 namespace Common.Extensions.Tests;
 
@@ -13,11 +18,45 @@ public class OptionsTests
     }
 
     [Test]
-    public void Some_ToString()
+    public void Get_Hashcode()
     {
-        var val = new Some<float>(0.3f);
-        var str = val.ToString();
-        Assert.IsInstanceOf<string>(str);
+        var a = 2.Some();
+        var b = 2.None();
+
+        Assert.AreEqual(b.GetHashCode(), 0);
+        Assert.AreNotEqual(a.GetHashCode(), 0);
+    }
+
+    [Test]
+    public void Implicit_TValue()
+    {
+        Option<int> a = 2;
+        Assert.AreEqual(2, (int) a);
+    }
+
+    [Test]
+    public void None_Equalities()
+    {
+        var some = 5.4.Some();
+        var none = 5.4.None();
+        var none2 = 2.1.None();
+        var none3 = 15.None();
+        Assert.AreNotEqual(some, none);
+        Assert.IsTrue(some  != none);
+        Assert.IsFalse(some == none);
+
+        Assert.AreEqual(none, none2);
+        Assert.IsTrue(none2  == none);
+        Assert.IsFalse(none2 != none);
+
+        Assert.AreNotEqual(none, none3);
+    }
+
+    [Test]
+    public void None_ToString_Throw()
+    {
+        var none = "".None();
+        Assert.Throws<Exception>(() => none.ToString());
     }
 
     [Test]
@@ -42,37 +81,10 @@ public class OptionsTests
     }
 
     [Test]
-    public void None_Equalities()
+    public void Some_ToString()
     {
-        var some = 5.4.Some();
-        var none = 5.4.None();
-        var none2 = 2.1.None();
-        var none3 = 15.None();
-        Assert.AreNotEqual(some, none);
-        Assert.IsTrue(some  != none);
-        Assert.IsFalse(some == none);
-
-        Assert.AreEqual(none, none2);
-        Assert.IsTrue(none2  == none);
-        Assert.IsFalse(none2 != none);
-
-        Assert.AreNotEqual(none, none3);
-    }
-
-    [Test]
-    public void Implicit_TValue()
-    {
-        Option<int> a = 2;
-        Assert.AreEqual(2, (int) a);
-    }
-
-    [Test]
-    public void Get_Hashcode()
-    {
-        var a = 2.Some();
-        var b = 2.None();
-
-        Assert.AreEqual(b.GetHashCode(), 0);
-        Assert.AreNotEqual(a.GetHashCode(), 0);
+        var val = new Some<float>(0.3f);
+        var str = val.ToString();
+        Assert.IsInstanceOf<string>(str);
     }
 }

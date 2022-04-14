@@ -1,36 +1,16 @@
+#region
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
+
+#endregion
 
 namespace Common.Extensions.Tests;
 
 [TestFixture]
 public class OptionsExtensionsTests
 {
-    [Test]
-    public void Some_FromNull()
-    {
-        object a = null;
-        var b = a.Some();
-
-        Console.WriteLine("Type should not be Some when fetching from null");
-        Console.WriteLine(b.GetType());
-
-        Assert.IsNotInstanceOf<Some<object>>(b);
-    }
-
-    [Test]
-    public void TryCatch_Map()
-    {
-        void TestDelegate()
-        {
-            TryCatch_Map_None();
-            TryCatch_Map_Some();
-        }
-
-        Assert.Multiple(TestDelegate);
-    }
-    
     public void TryCatch_Map_Some()
     {
         var m = GetDefault<string>;
@@ -43,30 +23,134 @@ public class OptionsExtensionsTests
         Assert.IsInstanceOf<None<string>>(m.TryCatch());
     }
 
-    [Test]
-    public void TryCatch_Bind()
-    {
-        void TestDelegate()
-        {
-            TryCatch_Bind_Some();
-            TryCatch_Bind_None();
-        }
-
-        Assert.Multiple(TestDelegate);
-    }
-
     private void TryCatch_Bind_Some()
     {
         var some = "2".Some();
         var func = new Func<string, Option<int>>(x => int.Parse(x).Some());
         Assert.DoesNotThrow(() => some.TryCatch(func));
     }
-    
+
     private void TryCatch_Bind_None()
     {
         var some = "2".None();
-        var func = new Func<string, Option<int>>(x => int.Parse(x).Some());
+        var func = new Func<string, Option<int>>(ParseToOptionInt);
         Assert.DoesNotThrow(() => some.TryCatch(func));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private Option<int> ParseToOptionInt(string val) => int.Parse(val).Some();
+
+    [ExcludeFromCodeCoverage]
+    private T Return<T>(T val) => val;
+
+    [ExcludeFromCodeCoverage]
+    private void ExplicitAssignmentWithThrow()
+    {
+        Option<int> start = new None<int>();
+        var end = (string) start.TryMap(x => x.ToString());
+    }
+
+    [ExcludeFromCodeCoverage]
+    private string UseToString<T>(T val) => val?.ToString() ?? throw new Exception();
+
+    [ExcludeFromCodeCoverage]
+    private T ThrowError<T>() => throw new Exception();
+
+    [ExcludeFromCodeCoverage]
+    private T? GetDefault<T>() => default;
+
+    [Test]
+    public void FromMaybeNull_And_IsSome_IsNone_Test()
+    {
+        object a = null;
+        var b = new object();
+        var c = 1;
+
+        Assert.IsTrue(a.FromMaybeNull().IsNone());
+        Assert.IsTrue(b.FromMaybeNull().IsSome());
+        Assert.IsTrue(c.FromMaybeNull().IsSome());
+    }
+
+    [Test]
+    public void MaybeDo()
+    {
+        var val = "";
+        var @do = new Action<string>(x => val = x);
+        var dont = new Action(() => val = "None");
+
+        var some = "Some".Some();
+        var none = "2".None();
+
+        some.MaybeDo(@do, dont);
+        Assert.AreEqual(val, "Some");
+
+        none.MaybeDo(@do, dont);
+        Assert.AreEqual(val, "None");
+    }
+
+    [Test]
+    public void MaybeDo_Throw()
+    {
+        var @do = new Action<string>(x => { Console.WriteLine($"{x} works fine"); });
+        var dont = new Action(() => throw new Exception());
+        var none = "2".None();
+
+        Assert.Throws<Exception>(() => none.MaybeDo(@do, dont));
+    }
+
+    [Test]
+    public void MaybeDoBind()
+    {
+        var @do = new Func<string, Option<string>>(x => x.Some());
+        var dont = new Func<Option<string>>(() => "None".None());
+
+        var some = "Some".Some();
+        var none = "2".None();
+
+        Assert.AreEqual(some.MaybeDoBind(@do, dont), "Some".Some());
+        Assert.AreEqual(none.MaybeDoBind(@do, dont), "None".None());
+    }
+
+    [Test]
+    public void MaybeDoBind_Throw()
+    {
+        var @do = new Func<string, Option<string>>(OptionExtensions.Some);
+        var dont = new Func<Option<string>>(() => throw new Exception());
+
+        var none = "Some".None();
+
+        Assert.Throws<Exception>(() => none.MaybeDoBind(@do, dont));
+    }
+
+    [Test]
+    public void MaybeMap_Some()
+    {
+        Console.WriteLine("Should return 'Some' if some and 'None' if none");
+        var some = "Some".Some();
+        var none = "None".None();
+        var ifsome = new Func<string, string>(x => x);
+        var ifnone = new Func<string>(() => "None");
+
+        var done = some.MaybeMap(ifsome, ifnone);
+        var didnt = none.MaybeMap(ifsome, ifnone);
+
+        Assert.AreEqual(done.TryGet(), "Some");
+        Assert.Throws<Exception>(() => didnt.TryGet());
+    }
+
+    [Test]
+    public void OptionMap_NoneChecks()
+    {
+        // some
+        Option<int> start = new None<int>();
+        var end = start.TryMap(UseToString);
+        Assert.AreEqual(new None<string>(), end);
+    }
+
+    [Test]
+    public void OptionMap_NoneChecks_Implicit()
+    {
+        Assert.Throws<Exception>(ExplicitAssignmentWithThrow);
     }
 
     [Test]
@@ -88,30 +172,15 @@ public class OptionsExtensionsTests
     }
 
     [Test]
-    public void OptionMap_NoneChecks()
-    {
-        // some
-        Option<int> start = new None<int>();
-        var end = start.TryMap(UseToString);
-        Assert.AreEqual(new None<string>(), end);
-    }
-
-    [Test]
-    public void OptionMap_NoneChecks_Implicit()
-    {
-        Assert.Throws<Exception>(ExplicitAssignmentWithThrow);
-    }
-
-    [Test]
-    public void FromMaybeNull_And_IsSome_IsNone_Test()
+    public void Some_FromNull()
     {
         object a = null;
-        var b = new object();
-        var c = 1;
+        var b = a.Some();
 
-        Assert.IsTrue(a.FromMaybeNull().IsNone());
-        Assert.IsTrue(b.FromMaybeNull().IsSome());
-        Assert.IsTrue(c.FromMaybeNull().IsSome());
+        Console.WriteLine("Type should not be Some when fetching from null");
+        Console.WriteLine(b.GetType());
+
+        Assert.IsNotInstanceOf<Some<object>>(b);
     }
 
     [Test]
@@ -127,92 +196,26 @@ public class OptionsExtensionsTests
     }
 
     [Test]
-    public void MaybeMap_Some()
+    public void TryCatch_Bind()
     {
-        Console.WriteLine("Should return 'Some' if some and 'None' if none");
-        var some = "Some".Some();
-        var none = "None".None();
-        var ifsome = new Func<string, string>(x => "Some");
-        var ifnone = new Func<string>(() => "None");
+        void TestDelegate()
+        {
+            TryCatch_Bind_Some();
+            TryCatch_Bind_None();
+        }
 
-        var done = some.MaybeMap(ifsome, ifnone);
-        var didnt = none.MaybeMap(ifsome, ifnone);
-
-        Assert.AreEqual(done.TryGet(), "Some");
-        Assert.Throws<Exception>(() => didnt.TryGet());
+        Assert.Multiple(TestDelegate);
     }
 
     [Test]
-    public void MaybeDo()
+    public void TryCatch_Map()
     {
-        var val = "";
-        var @do = new Action<string>(x => val = "Some");
-        var dont = new Action(() => val = "None");
+        void TestDelegate()
+        {
+            TryCatch_Map_None();
+            TryCatch_Map_Some();
+        }
 
-        var some = "2".Some();
-        var none = "2".None();
-
-        some.MaybeDo(@do, dont);
-        Assert.AreEqual(val, "Some");
-
-        none.MaybeDo(@do, dont);
-        Assert.AreEqual(val, "None");
+        Assert.Multiple(TestDelegate);
     }
-    
-    [Test]
-    public void MaybeDo_Throw()
-    {
-        var @do = new Action<string>(x => { });
-        var dont = new Action(() => throw new());
-        var none = "2".None();
-
-        Assert.Throws<Exception>(()=>none.MaybeDo(@do, dont));
-    }
-
-    [Test]
-    public void MaybeDoBind()
-    {
-        var @do = new Func<string, Option<string>>(x => "Some".Some());
-        var dont = new Func<Option<string>>(() => "None".None());
-
-        var some = "2".Some();
-        var none = "2".None();
-
-        Assert.AreEqual(some.MaybeDoBind(@do, dont), "Some".Some());
-        Assert.AreEqual(none.MaybeDoBind(@do, dont), "None".None());
-    }
-    
-    [Test]
-    public void MaybeDoBind_Throw()
-    {
-        var @do = new Func<string, Option<string>>(x => "Some".Some());
-        var dont = new Func<Option<string>>(() => throw new ());
-
-        var none = "2".None();
-
-        Assert.Throws<Exception>(()=>none.MaybeDoBind(@do, dont));
-    }
-
-#region Helper methods
-
-    [ExcludeFromCodeCoverage]
-    private T Return<T>(T val) => val;
-
-    [ExcludeFromCodeCoverage]
-    private void ExplicitAssignmentWithThrow()
-    {
-        Option<int> start = new None<int>();
-        var end = (string) start.TryMap(x => x.ToString());
-    }
-
-    [ExcludeFromCodeCoverage]
-    private string UseToString<T>(T val) => val?.ToString() ?? throw new Exception();
-
-    [ExcludeFromCodeCoverage]
-    private T ThrowError<T>() => throw new Exception();
-
-    [ExcludeFromCodeCoverage]
-    private T? GetDefault<T>() => default;
-
-#endregion
 }
