@@ -63,7 +63,7 @@ public class OptionsTests
     public void Implicit_TValue()
     {
         Option<int> a = 2;
-        Assert.AreEqual(2, (int)a);
+        Assert.AreEqual(2, (int) a);
     }
 
     [Test]
