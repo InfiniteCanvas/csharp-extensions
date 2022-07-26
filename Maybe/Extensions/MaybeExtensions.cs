@@ -1,7 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Common;
+namespace Common.Extensions;
 
+/// <summary>
+/// Extends the Maybe type with some useful methods.
+/// </summary>
 public static class MaybeExtensions
 {
     /// <summary>
