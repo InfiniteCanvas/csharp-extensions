@@ -1,5 +1,8 @@
-namespace Extensions;
+namespace Common.Extensions;
 
+/// <summary>
+/// Extends booleans with some useful methods.
+/// </summary>
 public static class BoolExtensions
 {
     /// <summary>

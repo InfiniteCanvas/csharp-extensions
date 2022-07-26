@@ -1,5 +1,8 @@
-namespace Extensions;
+namespace Common.Extensions;
 
+/// <summary>
+/// Extends IEnumerable with useful methods.
+/// </summary>
 public static class EnumerableExtensions
 {
     /// <summary>
@@ -11,7 +14,8 @@ public static class EnumerableExtensions
     public static TSource RandomChoice<TSource>(this IEnumerable<TSource> collection)
     {
         TSource[] enumerable = collection as TSource[] ?? collection.ToArray();
-        return enumerable.ElementAt(Random.Shared.Next(enumerable.Length));
+        var random = new Random();
+        return enumerable.ElementAt(random.Next(enumerable.Length));
     }
 
     /// <summary>
@@ -28,17 +32,19 @@ public static class EnumerableExtensions
     {
         TSource[] enumerable = collection as TSource[] ?? collection.ToArray();
         int[] indexList;
+        var random = new Random();
+
         if (duplicates)
         {
             var indices = new List<int>();
-            while (indices.Count < amount) { indices.Add(Random.Shared.Next(enumerable.Length)); }
+            while (indices.Count < amount) { indices.Add(random.Next(enumerable.Length)); }
 
             indexList = indices.ToArray();
         }
         else
         {
             var indices = new HashSet<int>();
-            while (indices.Count < amount) indices.Add(Random.Shared.Next(enumerable.Length));
+            while (indices.Count < amount) indices.Add(random.Next(enumerable.Length));
             indexList = indices.ToArray();
         }
 
@@ -108,5 +114,32 @@ public static class EnumerableExtensions
                                                    bool                            fromLeft = true)
     {
         return fromLeft ? ReduceLeft(collection, reduce, initial) : ReduceRight(collection, reduce, initial);
+    }
+
+    /// <summary>
+    /// Divides the collection into batches of the given size.
+    /// </summary>
+    /// <param name="collection"> The collection to divide. </param>
+    /// <param name="batchSize"> The size of each batch. </param>
+    /// <typeparam name="TSource"> The type of the items in the collection. </typeparam>
+    /// <returns> The collection divided into batches. Last batch of remainders might be smaller. </returns>
+    public static IEnumerable<IEnumerable<TSource>> Batch<TSource>(this IEnumerable<TSource> collection, int batchSize)
+    {
+        ArraySegment<TSource> batch;
+        ArraySegment<TSource> source = collection.ToArray();
+        int batchCount = source.Count / batchSize;
+        int remainder = source.Count % batchSize;
+
+        for (var currentBatch = 0; currentBatch < batchCount; currentBatch++)
+        {
+            batch = source.Slice(currentBatch * batchSize, batchSize);
+            yield return batch;
+        }
+        
+        if (remainder > 0)
+        {
+            batch = source.Slice(batchCount * batchSize, remainder);
+            yield return batch;
+        }
     }
 }

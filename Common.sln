@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaybeTests", "MaybeTests\Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Extensions\Extensions.csproj", "{260F093A-D5C5-46F6-84E5-D2F8B8A0FFEF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityExtensions", "UnityExtensions\UnityExtensions.csproj", "{ED6FEDEA-CAD4-4E5F-BDBD-080393DF58FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,13 +18,18 @@ Global
 		{6E1F334B-8069-4F58-B744-6C1FE7EE883A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E1F334B-8069-4F58-B744-6C1FE7EE883A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E1F334B-8069-4F58-B744-6C1FE7EE883A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E1F334B-8069-4F58-B744-6C1FE7EE883A}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{E73A138F-E32F-45FD-B808-348066429492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E73A138F-E32F-45FD-B808-348066429492}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E73A138F-E32F-45FD-B808-348066429492}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E73A138F-E32F-45FD-B808-348066429492}.Release|Any CPU.Build.0 = Release|Any CPU
 		{260F093A-D5C5-46F6-84E5-D2F8B8A0FFEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{260F093A-D5C5-46F6-84E5-D2F8B8A0FFEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{260F093A-D5C5-46F6-84E5-D2F8B8A0FFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{260F093A-D5C5-46F6-84E5-D2F8B8A0FFEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{260F093A-D5C5-46F6-84E5-D2F8B8A0FFEF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{ED6FEDEA-CAD4-4E5F-BDBD-080393DF58FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED6FEDEA-CAD4-4E5F-BDBD-080393DF58FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED6FEDEA-CAD4-4E5F-BDBD-080393DF58FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED6FEDEA-CAD4-4E5F-BDBD-080393DF58FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

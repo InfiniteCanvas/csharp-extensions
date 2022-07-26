@@ -1,5 +1,8 @@
-﻿namespace Extensions;
+﻿namespace Common.Extensions;
 
+/// <summary>
+/// Extends class instances with useful methods.
+/// </summary>
 public static class ClassExtensions
 {
     /// <summary>
