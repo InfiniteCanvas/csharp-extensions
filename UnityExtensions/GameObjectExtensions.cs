@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 
-namespace Common.UnityExtensions
+namespace Common.UnityExtensions;
+
+public static class GameObjectExtensions
 {
-    public static class GameObjectExtensions
+    public static TComponent?
+        GetComponentOrDefault<TComponent>(this GameObject gameObject, TComponent? defaultComponent = default)
+        where TComponent : Component =>
+        gameObject.GetComponent<TComponent>() ?? defaultComponent;
+
+    public static void DespawnToPool(this GameObject gameObject)
     {
-        public static TComponent?
-            GetComponentOrDefault<TComponent>(this GameObject gameObject, TComponent? defaultComponent = default)
-            where TComponent : Component
-        {
-            return gameObject.GetComponent<TComponent>() ?? defaultComponent;
-        }
+        PoolObject<GameObject> poolObject = gameObject.Pool();
+        poolObject.Despawn();
     }
 }

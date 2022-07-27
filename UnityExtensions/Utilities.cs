@@ -23,13 +23,10 @@ public static class Utilities
     public static TSource Retrieve<TSource>() where TSource : new()
     {
         int hash = typeof(TSource).GetHashCode();
-        if (_objects.TryGetValue(hash, out object instance)) return (TSource) instance;
+        if (_objects.TryGetValue(hash, out object instance)) return (TSource)instance;
         throw new
             InstanceNotFoundException($"Instance of type {typeof(TSource).Name} not found, provide it with the {nameof(Provide)} method first.");
     }
-    
-    public static TSource Retrieve<TSource>([NotNull] this TSource _) where TSource : new()
-    {
-        return Retrieve<TSource>();
-    }
+
+    public static TSource Retrieve<TSource>([NotNull] this TSource _) where TSource : new() => Retrieve<TSource>();
 }
