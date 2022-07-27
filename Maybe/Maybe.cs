@@ -51,6 +51,17 @@ public abstract class Maybe<TSource> : IEquatable<Maybe<TSource>>
         };
 
     /// <summary>
+    /// String representation of the value.
+    /// </summary>
+    /// <returns> If this value is <see cref="Some{TSource}" />, the string representation of the <see cref="Some{TSource}" /> value. Else, the string representation of <see cref="None{TSource}"/>. </returns>
+    public override string? ToString() =>
+        this switch
+        {
+            Some<TSource> some => some.ToString(),
+            _                  => None<TSource>.Instance.ToString(),
+        };
+
+    /// <summary>
     ///     Overrides the == operator to compare two Maybe values for equality. When both values are
     ///     <see cref="None{TSource}" />, they are considered equal.
     ///     When both values are <see cref="Some{TSource}" />, they are compared for equality with the
@@ -205,7 +216,7 @@ public sealed class None<TSource> : Maybe<TSource>, IEquatable<None<TSource>>
     /// Returns an empty string.
     /// </summary>
     /// <returns> string.Empty </returns>
-    public override string ToString() => string.Empty;
+    public override string? ToString() => string.Empty;
 
     /// <summary>
     /// Implicitly converts a <typeparamref name="TSource"/> to a <see cref="None{TSource}"/>.
