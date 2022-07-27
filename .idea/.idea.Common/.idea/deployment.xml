@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="local">
+        <serverdata>
+          <mappings>
+            <mapping local="$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/16.11.0/build/netcoreapp2.1/Microsoft.NET.Test.Sdk.Program.cs" web="/" />
+            <mapping local="$USER_HOME$/.nuget/packages/microsoft.testplatform.testhost/16.11.0/build/netcoreapp2.1/x64/Microsoft.TestPlatform.PlatformAbstractions.dll" web="/" />
+            <mapping local="$USER_HOME$/.nuget/packages/microsoft.testplatform.testhost/16.11.0/build/netcoreapp2.1/x64/testhost.dll" web="/" />
+            <mapping local="$USER_HOME$/.nuget/packages/microsoft.testplatform.testhost/16.11.0/build/netcoreapp2.1/x64/testhost.exe" web="/" />
+            <mapping local="$USER_HOME$/.nuget/packages/nunit3testadapter/4.0.0/build/netcoreapp2.1/NUnit3.TestAdapter.dll" web="/" />
+            <mapping local="$USER_HOME$/.nuget/packages/nunit3testadapter/4.0.0/build/netcoreapp2.1/NUnit3.TestAdapter.pdb" web="/" />
+            <mapping local="$USER_HOME$/.nuget/packages/nunit3testadapter/4.0.0/build/netcoreapp2.1/nunit.engine.api.dll" web="/" />
+            <mapping local="$USER_HOME$/.nuget/packages/nunit3testadapter/4.0.0/build/netcoreapp2.1/nunit.engine.core.dll" web="/" />
+            <mapping local="$USER_HOME$/.nuget/packages/nunit3testadapter/4.0.0/build/netcoreapp2.1/nunit.engine.dll" web="/" />
+            <mapping local="$USER_HOME$/.nuget/packages/nunit3testadapter/4.0.0/build/netcoreapp2.1/testcentric.engine.metadata.dll" web="/" />
+            <mapping local="$USER_HOME$/AppData/Local/Microsoft/dotnet/sdk/6.0.300/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_6_default.editorconfig" web="/" />
+            <mapping local="$USER_HOME$/AppData/Local/Microsoft/dotnet/sdk/6.0.300/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_6_default.editorconfig" web="/" />
+            <mapping local="$USER_HOME$/AppData/Local/Microsoft/dotnet/sdk/6.0.300/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_6_default.editorconfig" web="/" />
+            <mapping local="$PROJECT_DIR$/Common.sln" web="/" />
+            <mapping local="$PROJECT_DIR$/Extensions/ActionExtensions.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/Extensions/BoolExtensions.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/Extensions/ClassExtensions.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/Extensions/EnumerableExtensions.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/Extensions/Extensions.csproj" web="/" />
+            <mapping local="$PROJECT_DIR$/Extensions/obj/Release/net6.0/Extensions.AssemblyInfo.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/Extensions/obj/Release/net6.0/Extensions.GeneratedMSBuildEditorConfig.editorconfig" web="/" />
+            <mapping local="$PROJECT_DIR$/Extensions/obj/Release/net6.0/Extensions.GlobalUsings.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/Maybe/Maybe.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/Maybe/Maybe.csproj" web="/" />
+            <mapping local="$PROJECT_DIR$/Maybe/MaybeExtensions.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/Maybe/obj/Release/net6.0/Maybe.AssemblyInfo.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/Maybe/obj/Release/net6.0/Maybe.GeneratedMSBuildEditorConfig.editorconfig" web="/" />
+            <mapping local="$PROJECT_DIR$/Maybe/obj/Release/net6.0/Maybe.GlobalUsings.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/MaybeTests/MaybeClassTests_None.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/MaybeTests/MaybeClassTests_Some.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/MaybeTests/MaybeTests.csproj" web="/" />
+            <mapping local="$PROJECT_DIR$/MaybeTests/obj/Release/net6.0/MaybeTests.AssemblyInfo.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/MaybeTests/obj/Release/net6.0/MaybeTests.GeneratedMSBuildEditorConfig.editorconfig" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

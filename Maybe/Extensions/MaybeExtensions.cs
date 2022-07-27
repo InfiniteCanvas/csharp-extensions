@@ -49,39 +49,36 @@ public static class MaybeExtensions
         };
 
     /// <summary>
-    /// Maps the value of a <see cref="Some{TSource}"/> with the given function.
-    /// Otherwise returns the given default value or the <typeparamref name="TResult"/>'s default value.
+    /// Runs the given function if the maybe is a <see cref="Some{TSource}"/>.
     /// </summary>
-    /// <param name="maybe"> The maybe to map the value of. </param>
-    /// <param name="map"> The function to map the value with. </param>
-    /// <param name="defaultValue"> The default value to return if the maybe is not a <see cref="Some{TSource}"/>. If not specified, the <typeparamref name="TResult"/>'s default value is used. </param>
+    /// <param name="maybe"> The maybe to run the function on. </param>
+    /// <param name="func"> The function to run. </param>
     /// <typeparam name="TSource"> The type of the value. </typeparam>
     /// <typeparam name="TResult"> The type of the result. </typeparam>
-    /// <returns> The result of mapping the value if the maybe is a <see cref="Some{TSource}"/>, otherwise the given default value or the <typeparamref name="TResult"/>'s default value. </returns>
-    public static TResult? Map<TSource, TResult>(this Maybe<TSource>    maybe,
-                                                 Func<TSource, TResult> map,
-                                                 TResult?               defaultValue = default) =>
+    /// <returns> If <paramref name="maybe"/> is <see cref="Some{TSource}"/> the result of the given function, else <see cref="None{TSource}"/>. </returns>
+    public static Maybe<TResult>
+        Bind<TSource, TResult>(this Maybe<TSource> maybe, Func<TSource, Maybe<TResult>> func) =>
         maybe switch
         {
-            Some<TSource> some => map(some.Value),
-            _                  => defaultValue,
+            Some<TSource> some => func(some.Value),
+            _                  => Common.None<TResult>.Instance,
         };
 
     /// <summary>
-    /// Binds the value of a <see cref="Some{TSource}"/> with the given function.
+    /// Runs the given function if the maybe is a <see cref="Some{TSource}"/>.
     /// </summary>
-    /// <param name="maybe"> The maybe to bind the value of. </param>
-    /// <param name="bind"> The function to bind the value with. </param>
-    /// <param name="defaultValue"> The default value to return if the maybe is not a <see cref="Some{TSource}"/>. If not specified, the <typeparamref name="TResult"/>'s default value is used. </param>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TResult"></typeparam>
-    /// <returns></returns>
+    /// <param name="maybe"> The maybe to run the function on. </param>
+    /// <param name="onSome"> The function to run if the maybe is a <see cref="Some{TSource}"/>. </param>
+    /// <param name="onNone"> The function to run if the maybe is a <see cref="None{TSource}"/>. </param>
+    /// <typeparam name="TSource"> The type of the value. </typeparam>
+    /// <typeparam name="TResult"> The type of the result. </typeparam>
+    /// <returns> If <paramref name="maybe"/> is <see cref="Some{TSource}"/> the result of the <paramref name="onSome"/>, else the result of <paramref name="onNone"/>. </returns>
     public static Maybe<TResult> Bind<TSource, TResult>(this Maybe<TSource>           maybe,
-                                                        Func<TSource, Maybe<TResult>> bind,
-                                                        TResult?                      defaultValue = default) =>
+                                                        Func<TSource, Maybe<TResult>> onSome,
+                                                        Func<Maybe<TResult>>          onNone) =>
         maybe switch
         {
-            Some<TSource> some => bind(some.Value),
-            _                  => defaultValue.None(),
+            Some<TSource> some => onSome(some.Value),
+            _                  => onNone(),
         };
 }
