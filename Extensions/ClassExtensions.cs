@@ -6,20 +6,6 @@
 public static class ClassExtensions
 {
     /// <summary>
-    /// Executes given function with passed in value and returns its result, or <paramref name="defaultValue"/> if null.
-    /// </summary>
-    /// <param name="value">Value passed in.</param>
-    /// <param name="map"> Function to map value to a new value.</param>
-    /// <param name="defaultValue"> Default value to return if <paramref name="map"/> returns null.</param>
-    /// <typeparam name="TSource">Type of source.</typeparam>
-    /// <typeparam name="TResult">Type of result.</typeparam>
-    /// <returns></returns>
-    public static TResult? Bind<TSource, TResult>(this TSource           value,
-                                                  Func<TSource, TResult> map,
-                                                  TResult?               defaultValue = default) =>
-        value.Bind(map) ?? defaultValue;
-
-    /// <summary>
     /// Executes <paramref name="try"/> with passed in instance and catches any exceptions with <paramref name="catch"/>.
     /// </summary>
     /// <param name="instance"> Instance passed in. </param>
