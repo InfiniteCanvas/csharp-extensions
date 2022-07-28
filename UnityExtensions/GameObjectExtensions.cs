@@ -11,7 +11,7 @@ public static class GameObjectExtensions
 
     public static void DespawnToPool(this GameObject gameObject)
     {
-        PoolObject<GameObject> poolObject = gameObject.Pool();
+        PoolObject<GameObject> poolObject = gameObject.MakePoolable();
         poolObject.Despawn();
     }
 }

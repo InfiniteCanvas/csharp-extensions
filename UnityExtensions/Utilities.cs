@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Management.Instrumentation;
 using JetBrains.Annotations;
 
@@ -29,4 +30,13 @@ public static class Utilities
     }
 
     public static TSource Retrieve<TSource>([NotNull] this TSource _) where TSource : new() => Retrieve<TSource>();
+
+    public static double TimeIt(this Action action)
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        action();
+        stopwatch.Stop();
+        return stopwatch.Elapsed.TotalMilliseconds;
+    }
 }
