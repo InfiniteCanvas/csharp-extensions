@@ -5,12 +5,12 @@ using System.Linq;
 namespace Common.UnityExtensions;
 
 /// <summary>
-/// Extends IEnumerable with useful methods.
+///     Extends IEnumerable with useful methods.
 /// </summary>
 public static class EnumerableExtensions
 {
     /// <summary>
-    /// Picks a random element from a collection.
+    ///     Picks a random element from a collection.
     /// </summary>
     /// <param name="collection"> The collection to pick from. </param>
     /// <typeparam name="TSource"> The type of the elements in the collection. </typeparam>
@@ -23,7 +23,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Picks multiple random elements from a collection.
+    ///     Picks multiple random elements from a collection.
     /// </summary>
     /// <param name="collection"> The collection to pick from. </param>
     /// <param name="amount"> The amount of elements to pick. </param>
@@ -41,7 +41,7 @@ public static class EnumerableExtensions
         if (duplicates)
         {
             var indices = new List<int>();
-            while (indices.Count < amount) { indices.Add(random.Next(enumerable.Length)); }
+            while (indices.Count < amount) indices.Add(random.Next(enumerable.Length));
 
             indexList = indices.ToArray();
         }
@@ -56,7 +56,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Applies a function to each element in a collection.
+    ///     Applies a function to each element in a collection.
     /// </summary>
     /// <param name="collection"> The collection to apply the function to. </param>
     /// <param name="action"> The function to apply. </param>
@@ -67,7 +67,8 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Reduces the collection to a single value using the given function by applying the function to the previous result and the current item. Basically, Linq's Aggregate, but from the left.
+    ///     Reduces the collection to a single value using the given function by applying the function to the previous result
+    ///     and the current item. Basically, Linq's Aggregate, but from the left.
     /// </summary>
     /// <param name="collection"> The collection to reduce. </param>
     /// <param name="reduce"> The function to use to reduce the collection. </param>
@@ -85,7 +86,8 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Reduces the collection to a single value using the given function by applying the function to the previous result and the current item. Basically, Linq's Aggregate, but from the right (reverse).
+    ///     Reduces the collection to a single value using the given function by applying the function to the previous result
+    ///     and the current item. Basically, Linq's Aggregate, but from the right (reverse).
     /// </summary>
     /// <param name="collection"> The collection to reduce. </param>
     /// <param name="reduce"> The function to use to reduce the collection. </param>
@@ -103,7 +105,8 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Reduces the collection to a single value using the given function by applying the function to the previous result and the current item. Basically, Linq's Aggregate, but with direction specified.
+    ///     Reduces the collection to a single value using the given function by applying the function to the previous result
+    ///     and the current item. Basically, Linq's Aggregate, but with direction specified.
     /// </summary>
     /// <param name="collection"> The collection to reduce. </param>
     /// <param name="reduce"> The function to use to reduce the collection. </param>
@@ -115,13 +118,11 @@ public static class EnumerableExtensions
     public static TResult Reduce<TSource, TResult>(this IEnumerable<TSource>       collection,
                                                    Func<TSource, TResult, TResult> reduce,
                                                    TResult                         initial,
-                                                   bool                            fromLeft = true)
-    {
-        return fromLeft ? ReduceLeft(collection, reduce, initial) : ReduceRight(collection, reduce, initial);
-    }
+                                                   bool                            fromLeft = true) =>
+        fromLeft ? ReduceLeft(collection, reduce, initial) : ReduceRight(collection, reduce, initial);
 
     /// <summary>
-    /// Divides the collection into batches of the given size.
+    ///     Divides the collection into batches of the given size.
     /// </summary>
     /// <param name="collection"> The collection to divide. </param>
     /// <param name="batchSize"> The size of each batch. </param>
@@ -130,7 +131,7 @@ public static class EnumerableExtensions
     public static IEnumerable<IEnumerable<TSource>> Batch<TSource>(this IEnumerable<TSource> collection, int batchSize)
     {
         ArraySegment<TSource> batch;
-        var source = collection.ToArray();
+        TSource[] source = collection.ToArray();
         int batchCount = source.Length / batchSize;
         int remainder = source.Length  % batchSize;
 

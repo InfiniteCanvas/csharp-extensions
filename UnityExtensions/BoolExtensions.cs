@@ -3,12 +3,12 @@ using System;
 namespace Common.UnityExtensions;
 
 /// <summary>
-/// Extends booleans with some useful methods.
+///     Extends booleans with some useful methods.
 /// </summary>
 public static class BoolExtensions
 {
     /// <summary>
-    /// Decides which function to return based on the value of the boolean.
+    ///     Decides which function to return based on the value of the boolean.
     /// </summary>
     /// <param name="either"> The boolean used to decide. </param>
     /// <param name="onTrue"> The function to return if the boolean is true. </param>
@@ -26,7 +26,7 @@ public static class BoolExtensions
         };
 
     /// <summary>
-    /// Decides which function to execute based on the value of the boolean.
+    ///     Decides which function to execute based on the value of the boolean.
     /// </summary>
     /// <param name="either"> The boolean used to decide. </param>
     /// <param name="onTrue"> The function to use if the boolean is true. </param>
@@ -43,7 +43,7 @@ public static class BoolExtensions
         };
 
     /// <summary>
-    /// Decides which action to execute based on the value of the boolean.
+    ///     Decides which action to execute based on the value of the boolean.
     /// </summary>
     /// <param name="either"> The boolean used to decide. </param>
     /// <param name="onTrue"> The action to use if the boolean is true. </param>

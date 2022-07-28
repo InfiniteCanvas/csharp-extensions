@@ -78,10 +78,7 @@ public class Pool<TSource> where TSource : new()
         return false;
     }
 
-    public bool Despawn(IEnumerable<PoolObject<TSource>> objs)
-    {
-        return objs.Select(Despawn).All(despawned => despawned);
-    }
+    public bool Despawn(IEnumerable<PoolObject<TSource>> objs) => objs.Select(Despawn).All(despawned => despawned);
 
     public void DespawnAll()
     {
@@ -93,7 +90,7 @@ public class Pool<TSource> where TSource : new()
         PoolObject<TSource> obj = source.MakePoolable();
 
         if (InPool(obj)) return false;
-        
+
         OnObjectAdded(obj);
         _availablePoolObjects.Push(obj);
         return true;
@@ -110,7 +107,7 @@ public class Pool<TSource> where TSource : new()
     public void Create(int count)
     {
         var i = 0;
-        while (i<count)
+        while (i < count)
         {
             Add(new PoolObject<TSource>(_factory()));
             i++;
